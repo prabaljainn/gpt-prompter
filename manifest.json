@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Content Grabber",
+  "version": "1.0",
+  "permissions": ["activeTab", "tabs", "scripting", "storage"],
+
+  "action": {
+    "default_title": "AZ Todo Problems",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["addEvent.js", "removeEvent.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
