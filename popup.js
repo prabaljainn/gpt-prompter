@@ -20,6 +20,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
     button.textContent = isStarted ? "Stop" : "Start";
   });
 });
-document.querySelector(".text-contains").innerText = chrome.storage.local.get({
-  isStarted: !isStarted,
-});
+
+function myFunction() {
+  chrome.runtime.sendMessage({ command: "getSnippets" }, (response) => {
+    response.snippets.forEach((snippet) => {
+      let li = document.createElement("li");
+      li.textContent = snippet;
+      document.getElementById("text-cnt").innerHTML = li;
+    });
+  });
+}
+
+setInterval(myFunction, 1000);
