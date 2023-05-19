@@ -1,13 +1,15 @@
 // popup.js
 document.getElementById("start").addEventListener("click", function () {
-  chrome.runtime.sendMessage({ command: "toggleState" }, (response) => {
+  chrome.runtime.sendMessage({ command: "getState" }, (response) => {
     let isStarted = response.isStarted;
-    let buttonText = isStarted ? "Stop" : "Start";
-    this.textContent = buttonText;
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        command: buttonText.toLowerCase(),
+    let nextCommand = isStarted ? "stop" : "start";
+    chrome.runtime.sendMessage({ command: "toggleState" }, (response) => {
+      chrome.tabs.query({}, function (tabs) {
+        for (let i = 0; i < tabs.length; i++) {
+          chrome.tabs.sendMessage(tabs[i].id, { command: nextCommand });
+        }
       });
+      this.textContent = nextCommand === "start" ? "Stop" : "Start";
     });
   });
 });
@@ -21,14 +23,24 @@ document.addEventListener("DOMContentLoaded", (event) => {
   });
 });
 
-function myFunction() {
+function paintSnippets() {
   chrome.runtime.sendMessage({ command: "getSnippets" }, (response) => {
-    response.snippets.forEach((snippet) => {
-      let li = document.createElement("li");
-      li.textContent = snippet;
-      document.getElementById("text-cnt").innerHTML = li;
-    });
+    let snippets = response.snippets;
+    console.log(snippets);
+    snippetsDiv.innerHTML = "";
+    for (let i = 0; i < snippets.length; i++) {
+      let p = document.createElement("p");
+      p.textContent = snippets[i];
+      snippetsDiv.appendChild(p);
+    }
   });
 }
+// Get the div where the snippets will be displayed
+let snippetsDiv = document.getElementById("text-cnt");
+document.addEventListener("DOMContentLoaded", paintSnippets);
 
-setInterval(myFunction, 1000);
+document.getElementById("reset").addEventListener("click", function () {
+  chrome.runtime.sendMessage({ command: "resetSnippets" }, (response) => {
+    paintSnippets();
+  });
+});

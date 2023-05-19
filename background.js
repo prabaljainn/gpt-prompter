@@ -1,15 +1,27 @@
 let isStarted = false;
-const snippets = [];
+let snippets = [];
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.command === "getState") {
-    sendResponse({ isStarted: isStarted });
-  } else if (request.command === "toggleState") {
-    isStarted = !isStarted;
-    sendResponse({ isStarted: isStarted });
-  } else if (request.command === "getSnippets") {
-    sendResponse({ snippets: snippets });
-  } else if (request.command === "addSnippet") {
-    snippets.push(request.snippet);
-    sendResponse({ snippets: snippets });
+  switch (request.command) {
+    case "getState":
+      sendResponse({ isStarted: isStarted });
+      break;
+    case "toggleState":
+      isStarted = !isStarted;
+      sendResponse({ isStarted: isStarted });
+      break;
+    case "getSnippets":
+      sendResponse({ snippets: snippets });
+      break;
+    case "resetSnippets":
+      snippets = [];
+      sendResponse({ snippets: snippets });
+      break;
+    case "addSnippet":
+      snippets.push(request.snippet);
+      sendResponse({ snippets: snippets });
+      break;
+    default:
+      console.log("Unknown command: " + request.command);
   }
 });
