@@ -5,12 +5,15 @@
       <button id="start">Start</button>
       <button id="reset">Reset</button>
       <button id="gpt">AskGPT</button>
+      <button id="copy">Copy-Prompt</button>
     </div>
-    <div
-      id="text-cnt"
-      class="text-contains"
-      style="height: 600px; width: 600px"
-    ></div>
+    <div class="flex-row" style="display: flex; flex-direction: row">
+      <div
+        id="snippets"
+        style="width: 300px; height: 600px; overflow: auto"
+      ></div>
+      <textarea id="text-cnt" style="width: 300px; height: 600px"></textarea>
+    </div>
   </body>
   <script src="popup.js"></script>
 </html>

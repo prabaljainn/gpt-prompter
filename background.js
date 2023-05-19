@@ -25,3 +25,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       console.log("Unknown command: " + request.command);
   }
 });
+
+// faltu ka code hai ye neeche waala but anyhow error ek kam karta hai toh chalta hai
+chrome.runtime.onMessageExternal.addListener(
+  (request, sender, sendResponse) => {
+    console.log("Received message from " + sender + ": ", request);
+    sendResponse({ received: true });
+    //respond however you like
+  }
+);
