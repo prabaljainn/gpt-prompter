@@ -31,14 +31,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           height: 800,
         },
         (window) => {
+          // Inject content script into the newly created tab
           chrome.tabs.onUpdated.addListener(function tabUpdateListener(
             tabId,
-            changeInfo
+            changeInfo,
+            tab
           ) {
             if (
               tabId === window.tabs[0].id &&
               changeInfo.status === "complete"
             ) {
+              chrome.tabs.executeScript(tabId, {
+                file: "content.js",
+              });
               chrome.tabs.sendMessage(tabId, {
                 command: "pastePrompt",
                 prompt: request.prompt,

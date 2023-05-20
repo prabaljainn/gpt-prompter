@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html>
-  <body>
-    <div class="flex-row" style="display: flex; flex-direction: row">
-      <button id="start">Start</button>
-      <button id="reset">Reset</button>
-      <button id="gpt">AskGPT</button>
-      <button id="copy">Copy-Prompt</button>
-    </div>
-    <div class="flex-row" style="display: flex; flex-direction: row">
-      <div
-        id="snippets"
-        style="width: 300px; height: 600px; overflow: auto"
-      ></div>
-      <textarea id="text-cnt" style="width: 300px; height: 600px"></textarea>
+  <body style="background-color: rgb(224, 173, 173)">
+    <div
+      class="flex-column"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div class="flex-row" style="display: flex; flex-direction: row">
+        <button style="margin-left: 5px; padding: 2px" id="start">Start</button>
+        <button style="margin-left: 5px" id="reset">Reset</button>
+        <button style="margin-left: 5px" id="gpt">AskGPT</button>
+        <button style="margin-left: 5px" id="copy">Copy-Prompt</button>
+      </div>
+      <div class="flex-row" style="display: flex; flex-direction: row">
+        <div
+          id="snippets"
+          style="width: 300px; height: 600px; overflow: auto"
+        ></div>
+        <textarea id="text-cnt" style="width: 300px; height: 600px"></textarea>
+      </div>
     </div>
   </body>
   <script src="popup.js"></script>
