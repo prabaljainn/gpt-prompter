@@ -1,5 +1,6 @@
 // Keep track of the currently highlighted element
 let highlightedElement;
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // Handler for the mouseover event. It highlights the hovered element
 let mouseoverHandler = function (event) {
@@ -33,17 +34,43 @@ let clickHandler = function (event) {
 // Listen for messages from the background script
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.command === "start") {
-    // When the extension is started, attach the mouseover, mouseout, and click event listeners
     document.addEventListener("mouseover", mouseoverHandler);
     document.addEventListener("mouseout", mouseoutHandler);
     document.addEventListener("click", clickHandler);
   } else if (request.command === "stop") {
-    // When the extension is stopped, remove the event listeners and the highlight from the last highlighted element
     if (highlightedElement) {
-      highlightedElement.style.backgroundColor = "";
+      highlightedElement.style.backgroundColor = ""; // remove outline
     }
     document.removeEventListener("mouseover", mouseoverHandler);
     document.removeEventListener("mouseout", mouseoutHandler);
     document.removeEventListener("click", clickHandler);
+  } else if (request.command === "pastePrompt") {
+    waitPrompt().then(() => {
+      let prompt = request.prompt;
+      let inputField = document.querySelector("#prompt-textarea");
+      let sendButton = document.querySelector(
+        ".absolute.p-1.rounded-md.text-gray-500"
+      );
+      inputField.value = prompt;
+      // inputField.dispatchEvent(new Event("input"));
+      sendButton.click();
+    });
   }
 });
+async function waitPrompt() {
+  await delay(5000);
+}
+
+// console.log("1");
+// let snippets = request.snippets;
+// let prompt = request.prompt;
+// alert("prompt: " + prompt);
+// let inputField = document.querySelector("#prompt-textarea");
+// console.log("2");
+// if (inputField) {
+//   inputField.value = prompt;
+//   console.log("3");
+// }
+// console.log("4");
+// document.querySelector(".absolute.p-1.rounded-md.text-gray-500").click();
+// console.log("5");
