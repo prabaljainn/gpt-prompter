@@ -1,3 +1,18 @@
+document.getElementById("start").addEventListener("click", function () {
+  chrome.runtime.sendMessage({ command: "getState" }, (response) => {
+    let isStarted = response.isStarted;
+    let nextCommand = isStarted ? "stop" : "start";
+    chrome.runtime.sendMessage({ command: "toggleState" }, (response) => {
+      chrome.tabs.query({}, function (tabs) {
+        for (let i = 0; i < tabs.length; i++) {
+          chrome.tabs.sendMessage(tabs[i].id, { command: nextCommand });
+        }
+      });
+      this.textContent = nextCommand === "start" ? "Stop" : "Start";
+    });
+  });
+});
+
 // Function to paint snippets in the popup
 function paintSnippets() {
   chrome.runtime.sendMessage({ command: "getSnippets" }, (response) => {
@@ -16,25 +31,6 @@ function paintSnippets() {
     }
   });
 }
-
-// Event listener for "Start" button
-// It communicates with the background script to get and toggle the state
-document.getElementById("start").addEventListener("click", function () {
-  chrome.runtime.sendMessage({ command: "getState" }, (response) => {
-    let isStarted = response.isStarted;
-    let nextCommand = isStarted ? "stop" : "start";
-    chrome.runtime.sendMessage({ command: "toggleState" }, (response) => {
-      chrome.tabs.query({}, function (tabs) {
-        for (let i = 0; i < tabs.length; i++) {
-          if (tabs[i].status === "complete") {
-            chrome.tabs.sendMessage(tabs[i].id, { command: nextCommand });
-          }
-        }
-      });
-      this.textContent = nextCommand === "start" ? "Stop" : "Start";
-    });
-  });
-});
 
 // Update button text when popup loads and paint snippets
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -62,21 +58,6 @@ document.getElementById("copy").addEventListener("click", function () {
   document.execCommand("copy");
   chrome.windows.create({
     url: "https://chat.openai.com/",
-  });
-});
-
-document.getElementById("start").addEventListener("click", function () {
-  chrome.runtime.sendMessage({ command: "getState" }, (response) => {
-    let isStarted = response.isStarted;
-    let nextCommand = isStarted ? "stop" : "start";
-    chrome.runtime.sendMessage({ command: "toggleState" }, (response) => {
-      chrome.tabs.query({}, function (tabs) {
-        for (let i = 0; i < tabs.length; i++) {
-          chrome.tabs.sendMessage(tabs[i].id, { command: nextCommand });
-        }
-      });
-      this.textContent = nextCommand === "start" ? "Stop" : "Start";
-    });
   });
 });
 
