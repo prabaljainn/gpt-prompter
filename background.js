@@ -1,7 +1,5 @@
 let isStarted = false;
 let snippets = [];
-// let screenWidth = window.screen.width;
-// let screenHeight = window.screen.height;
 
 // Listener for messages from the popup script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

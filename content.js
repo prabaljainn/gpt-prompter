@@ -51,7 +51,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       let sendButton = document.querySelector(
         ".absolute.p-1.rounded-md.text-gray-500"
       );
-      inputField.value = prompt;
+      inputField.innerText = prompt;
+      let event = new Event("input", { bubbles: true, cancelable: true });
+      inputField.dispatchEvent(event);
       // inputField.dispatchEvent(new Event("input"));
       sendButton.click();
     });
